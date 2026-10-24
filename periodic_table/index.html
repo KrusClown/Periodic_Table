@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Periodic Playground</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@500;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="app">
+  <header>
+    <div class="logo" aria-hidden="true"><div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="core"></div></div>
+    <div>
+      <h1 aria-label="Periodic Playground"><span>Periodic</span> <span>Playground</span></h1>
+      <p class="tagline">All 118 elements as candy tiles. Hover to peek, click to watch the atom spin, and switch to 3D to send the whole table flying.</p>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="group" role="group" aria-label="View">
+      <span class="group-label">View</span>
+      <button class="btn" data-view="table" aria-pressed="true">Table</button>
+      <button class="btn" data-view="sphere" aria-pressed="false">Sphere</button>
+      <button class="btn" data-view="helix" aria-pressed="false">Helix</button>
+      <button class="btn" data-view="cube" aria-pressed="false">Cube</button>
+    </div>
+    <div class="group" role="group" aria-label="Color by">
+      <span class="group-label">Color</span>
+      <button class="btn" data-color="family" aria-pressed="true">Family</button>
+      <button class="btn" data-color="state" aria-pressed="false">State</button>
+      <button class="btn" data-color="mass" aria-pressed="false">Weight</button>
+    </div>
+    <label class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <input id="q" type="search" placeholder="Find: gold, Fe, 26…" aria-label="Search elements" autocomplete="off">
+    </label>
+    <button class="candy" id="dice" style="--c:var(--c-metalloid)">Surprise me</button>
+    <button class="candy" id="quizBtn" style="--c:var(--pop)">Play: Find it!</button>
+  </div>
+
+  <div class="quizbar" id="quizbar" hidden></div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="stage" id="stage">
+    <div class="scene" id="scene"></div>
+    <div class="stage-hint" id="hint">Drag to tilt and move. Hover a tile to peek.</div>
+    <div class="stage-ctrl">
+      <button id="zout" aria-label="Zoom out">−</button>
+      <button id="zreset" aria-label="Reset view" style="font-size:14px">⟲</button>
+      <button id="zin" aria-label="Zoom in">+</button>
+    </div>
+  </div>
+
+  <section class="learn">
+    <div class="panel">
+      <h2>How to read a tile</h2>
+      <div class="anatomy">
+        <div class="p-tile" style="--c:var(--c-nonmetal)"><span class="n">6</span><span class="s">C</span><span class="m">12.011</span></div>
+        <ul>
+          <li><b>6</b><span><strong>Atomic number.</strong> How many protons live in the nucleus. It is the element's ID card.</span></li>
+          <li><b>C</b><span><strong>Symbol.</strong> One or two letters. Some come from Latin: Fe is <em>ferrum</em>, iron.</span></li>
+          <li><b>12.011</b><span><strong>Atomic mass.</strong> How heavy one atom is, in atomic mass units (u). Numbers in brackets are lab-made atoms that never sit still.</span></li>
+          <li><b>Row</b><span><strong>Period.</strong> Same row, same number of electron shells.</span></li>
+          <li><b>Column</b><span><strong>Group.</strong> Same column, similar personality.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Try this</h2>
+      <ul class="tries">
+        <li><button class="candy" style="--c:var(--c-liquid)" data-try="state">Go</button><span>Color by <strong>State</strong>. Only two elements are liquid at room temperature. Can you spot them?</span></li>
+        <li><button class="candy" style="--c:var(--c-noble)" data-try="noble">Go</button><span>Light up the <strong>noble gases</strong>. They are the calm loners on the far right.</span></li>
+        <li><button class="candy" style="--c:var(--c-transition)" data-try="sphere">Go</button><span>Turn the table into a <strong>sphere</strong> and spin it with your finger or mouse.</span></li>
+        <li><button class="candy" style="--c:var(--c-alkali)" data-try="atom">Go</button><span>Open <strong>Gold</strong> and tap its atom to zap the electrons.</span></li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mName">
+  <div class="modal-back" data-close></div>
+  <div class="card" id="card">
+    <button class="x" data-close aria-label="Close">×</button>
+    <div class="atom-wrap">
+      <canvas id="atom" aria-label="Animated atom model"></canvas>
+      <div class="legend-mini"><span style="--d:var(--c-alkali)">proton</span><span style="--d:var(--c-transition)">neutron</span><span style="--d:var(--pop)">electron</span></div>
+      <p class="atom-hint">Drag to spin · tap to zap</p>
+    </div>
+    <div class="info">
+      <div class="hero-row">
+        <div class="big-tile" id="mTile"><span class="n"></span><span class="s"></span><span class="m"></span></div>
+        <div style="min-width:0"><span class="p-cat" id="mCat"></span><h2 id="mName"></h2></div>
+      </div>
+      <div class="example"><span class="emo" id="mEmo"></span><div><small>Where you meet it</small><p id="mEx"></p></div></div>
+      <dl class="stats" id="mStats"></dl>
+      <div class="shells"><small>Electron shells (simplified)</small><div class="shell-row" id="mShells"></div><div class="conf" id="mConf"></div></div>
+      <div class="nav">
+        <button class="candy" id="prev" style="--c:var(--c-post)">‹ Previous</button>
+        <button class="candy" id="say" style="--c:var(--c-halogen)">Say it</button>
+        <button class="candy" id="next" style="--c:var(--c-post)">Next ›</button>
+      </div>
+    </div>
+  </div>
+</div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
