@@ -13,6 +13,9 @@
   --f-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
 }
 *{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0}
+img{max-width:100%}
 html{background:var(--night)}
 body{background:radial-gradient(1200px 700px at 70% -10%, var(--night-3), transparent 60%),var(--night);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;overflow-x:hidden;min-height:100%}
 #bg,#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none}
